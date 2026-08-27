@@ -3,6 +3,9 @@
 API REST Node.js + Express + TypeScript. Les données sont gardées en mémoire :
 elles repartent de zéro à chaque redémarrage du serveur.
 
+Vue d'ensemble du projet, stack et choix d'architecture :
+[README à la racine](../README.md).
+
 ## Installation et démarrage
 
 L'installation se fait à la racine du dépôt (monorepo npm) :
