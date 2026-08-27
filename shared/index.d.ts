@@ -14,3 +14,11 @@ export interface Ticket {
 export interface NewTicket {
   title: string
 }
+
+// Réponse de la liste des tickets : une page et de quoi la situer.
+export interface TicketPage {
+  items: Ticket[]
+  total: number
+  page: number
+  pageSize: number
+}
