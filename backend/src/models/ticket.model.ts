@@ -1,15 +1,3 @@
-// Le modèle décrit la forme d'un ticket. Le front utilise les mêmes champs.
-
-export type TicketStatus = 'open' | 'closed'
-
-export interface Ticket {
-  id: string
-  title: string
-  status: TicketStatus
-  createdAt: string
-}
-
-// Ce que le client envoie pour créer un ticket.
-export interface NewTicket {
-  title: string
-}
+// Le modèle du ticket vient du paquet partagé : le front et le back
+// travaillent ainsi sur exactement les mêmes champs.
+export type { NewTicket, Ticket, TicketStatus } from '@ticket-app/shared'

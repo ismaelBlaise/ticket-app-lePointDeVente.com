@@ -1,4 +1,4 @@
-import type { NewTicket, Ticket } from '@/types/ticket'
+import type { NewTicket, Ticket } from '@ticket-app/shared'
 import { get, post } from './http'
 
 export function getTickets(): Promise<Ticket[]> {
