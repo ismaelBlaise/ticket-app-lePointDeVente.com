@@ -3,10 +3,16 @@ import { useTickets } from '@/hooks/useTickets'
 import { formatDate } from '@/utils/date'
 import { STATUS_LABELS } from '@/utils/status'
 import { Badge } from './Badge'
+import { Button } from './Button'
 import { Empty, ErrorMessage, Loading } from './Message'
 
-export function TicketList() {
-  const { data, isPending, isError, error, refetch } = useTickets()
+interface TicketListProps {
+  page: number
+  onPageChange: (page: number) => void
+}
+
+export function TicketList({ page, onPageChange }: TicketListProps) {
+  const { data, isPending, isError, error, refetch } = useTickets(page)
 
   if (isPending) {
     return <Loading text="Chargement des tickets…" />
@@ -16,16 +22,40 @@ export function TicketList() {
     return <ErrorMessage text={error.message} onRetry={() => refetch()} />
   }
 
-  if (data.length === 0) {
+  if (data.items.length === 0) {
     return <Empty text="Aucun ticket pour le moment." />
   }
 
+  const totalPages = Math.ceil(data.total / data.pageSize)
+
   return (
-    <ul className="grid gap-2">
-      {data.map((ticket) => (
-        <TicketRow key={ticket.id} ticket={ticket} />
-      ))}
-    </ul>
+    <div className="grid gap-4">
+      <ul className="grid gap-2">
+        {data.items.map((ticket) => (
+          <TicketRow key={ticket.id} ticket={ticket} />
+        ))}
+      </ul>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <Button variant="secondary" disabled={page === 1} onClick={() => onPageChange(page - 1)}>
+            Précédent
+          </Button>
+
+          <span className="text-sm text-muted">
+            Page {page} sur {totalPages}
+          </span>
+
+          <Button
+            variant="secondary"
+            disabled={page === totalPages}
+            onClick={() => onPageChange(page + 1)}
+          >
+            Suivant
+          </Button>
+        </div>
+      )}
+    </div>
   )
 }
 

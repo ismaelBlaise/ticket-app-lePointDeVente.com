@@ -4,7 +4,11 @@ import { useCreateTicket } from '@/hooks/useTickets'
 import { Button } from './Button'
 import { Input } from './Input'
 
-export function TicketForm() {
+interface TicketFormProps {
+  onCreated: () => void
+}
+
+export function TicketForm({ onCreated }: TicketFormProps) {
   const [title, setTitle] = useState('')
   const [error, setError] = useState('')
   const createTicket = useCreateTicket()
@@ -18,7 +22,15 @@ export function TicketForm() {
     }
 
     setError('')
-    createTicket.mutate({ title: title.trim() }, { onSuccess: () => setTitle('') })
+    createTicket.mutate(
+      { title: title.trim() },
+      {
+        onSuccess: () => {
+          setTitle('')
+          onCreated()
+        },
+      },
+    )
   }
 
   return (

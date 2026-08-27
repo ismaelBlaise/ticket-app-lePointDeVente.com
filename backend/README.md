@@ -55,14 +55,26 @@ Le contrôleur ne contient pas de logique métier, et le service ne connaît ni
 
 ## Routes
 
-| Méthode | URL            | Corps attendu         | Réponse                            |
-| ------- | -------------- | --------------------- | ---------------------------------- |
-| `GET`   | `/api/tickets` | —                     | `200` la liste des tickets         |
-| `POST`  | `/api/tickets` | `{ "title": "..." }`  | `201` le ticket créé               |
+| Méthode | URL                              | Corps attendu        | Réponse                    |
+| ------- | -------------------------------- | -------------------- | -------------------------- |
+| `GET`   | `/api/tickets`                   | —                    | `200` tous les tickets     |
+| `GET`   | `/api/tickets?page=2&pageSize=5` | —                    | `200` une page de tickets  |
+| `POST`  | `/api/tickets`                   | `{ "title": "..." }` | `201` le ticket créé       |
+
+La lecture renvoie toujours la même forme, paginée ou non :
 
 ```json
-{ "id": "...", "title": "...", "status": "open", "createdAt": "..." }
+{
+  "items": [{ "id": "...", "title": "...", "status": "open", "createdAt": "..." }],
+  "total": 6,
+  "page": 1,
+  "pageSize": 5
+}
 ```
+
+`page` et `pageSize` sont facultatifs. Sans eux, la réponse contient tous les
+tickets. Dès que l'un des deux est présent, la pagination s'applique : `page`
+vaut 1 et `pageSize` vaut 5 par défaut, et `pageSize` ne peut pas dépasser 50.
 
 À la création, le serveur génère l'identifiant, met le statut à `open` et
 enregistre la date. Le titre est obligatoire et limité à 120 caractères.

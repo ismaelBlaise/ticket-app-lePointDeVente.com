@@ -4,10 +4,12 @@ import { createTicket, getTickets } from '@/api/tickets'
 // Nom du cache de la liste. Sert à la lire et à la recharger après un ajout.
 const TICKETS_KEY = ['tickets']
 
-export function useTickets() {
+export const PAGE_SIZE = 5
+
+export function useTickets(page: number) {
   return useQuery({
-    queryKey: TICKETS_KEY,
-    queryFn: getTickets,
+    queryKey: [...TICKETS_KEY, page],
+    queryFn: () => getTickets(page, PAGE_SIZE),
   })
 }
 

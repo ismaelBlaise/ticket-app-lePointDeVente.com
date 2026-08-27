@@ -29,7 +29,16 @@ function mockApi() {
         return { ok: true, status: 201, json: async () => created }
       }
 
-      return { ok: true, status: 200, json: async () => [...tickets] }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          items: [...tickets],
+          total: tickets.length,
+          page: 1,
+          pageSize: 5,
+        }),
+      }
     }),
   )
 }
