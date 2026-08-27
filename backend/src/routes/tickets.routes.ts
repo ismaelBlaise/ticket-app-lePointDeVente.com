@@ -1,6 +1,10 @@
 import { Router } from 'express'
+import { getTickets, patchTicketStatus, postTicket } from '../controllers/tickets.controller'
 
 // Les routes associent une URL à une fonction du contrôleur.
-// GET / et POST / arrivent avec les user stories 1 et 2.
 
 export const ticketsRouter = Router()
+
+ticketsRouter.get('/', getTickets)
+ticketsRouter.post('/', postTicket)
+ticketsRouter.patch('/:id', patchTicketStatus)

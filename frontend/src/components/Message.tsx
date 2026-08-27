@@ -5,7 +5,11 @@ import { Button } from './Button'
 
 const BOX = 'rounded-box border border-dashed border-line p-6 text-center text-muted'
 
-export function Loading({ text = 'Chargement…' }: { text?: string }) {
+interface LoadingProps {
+  text?: string
+}
+
+export function Loading({ text = 'Chargement…' }: LoadingProps) {
   return (
     <p className={BOX} role="status">
       {text}
@@ -13,17 +17,27 @@ export function Loading({ text = 'Chargement…' }: { text?: string }) {
   )
 }
 
-export function Empty({ text }: { text: string }) {
+interface EmptyProps {
+  text: string
+}
+
+export function Empty({ text }: EmptyProps) {
   return <p className={BOX}>{text}</p>
 }
 
-export function ErrorMessage({ text, onRetry }: { text: string; onRetry?: () => void }) {
+interface ErrorMessageProps {
+  text: string
+  onRetry?: () => void
+}
+
+export function ErrorMessage({ text, onRetry }: ErrorMessageProps) {
   return (
     <div
       role="alert"
       className="flex flex-col items-center gap-3 rounded-box border border-danger bg-danger-light p-6 text-center text-danger"
     >
       <p>{text}</p>
+
       {onRetry && (
         <Button variant="secondary" onClick={onRetry}>
           Réessayer

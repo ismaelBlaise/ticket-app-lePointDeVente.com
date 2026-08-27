@@ -1,12 +1,12 @@
 import { useId } from 'react'
 import type { InputHTMLAttributes } from 'react'
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
   error?: string
 }
 
-export function Input({ label, error, ...props }: Props) {
+export function Input({ label, error, ...props }: InputProps) {
   // useId donne un identifiant unique pour relier le label et le champ.
   const id = useId()
 
@@ -15,11 +15,13 @@ export function Input({ label, error, ...props }: Props) {
       <label className="text-sm font-semibold" htmlFor={id}>
         {label}
       </label>
+
       <input
         {...props}
         id={id}
         className={`rounded-box border bg-surface px-3 py-2 ${error ? 'border-danger' : 'border-line'}`}
       />
+
       {error && <p className="text-sm text-danger">{error}</p>}
     </div>
   )

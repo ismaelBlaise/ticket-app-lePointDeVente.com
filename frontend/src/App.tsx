@@ -1,6 +1,33 @@
-import { Empty } from '@/components/Message'
+import { useState } from 'react'
+import type { TicketSort } from '@ticket-app/shared'
+import { TicketFilters } from '@/components/TicketFilters'
+import { TicketForm } from '@/components/TicketForm'
+import { TicketList } from '@/components/TicketList'
+import { useDebounce } from '@/hooks/useDebounce'
+import { DEFAULT_PAGE_SIZE } from '@/hooks/useTickets'
 
 export function App() {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
+  const [search, setSearch] = useState('')
+  const [sort, setSort] = useState<TicketSort>('desc')
+  const debouncedSearch = useDebounce(search)
+
+  function changeSearch(value: string) {
+    setSearch(value)
+    setPage(1)
+  }
+
+  function changeSort(value: TicketSort) {
+    setSort(value)
+    setPage(1)
+  }
+
+  function changePageSize(value: number) {
+    setPageSize(value)
+    setPage(1)
+  }
+
   return (
     <>
       <header className="border-b border-line bg-surface">
@@ -13,12 +40,29 @@ export function App() {
       <main className="mx-auto grid w-full max-w-3xl gap-8 px-5 py-8">
         <section className="grid gap-4">
           <h2 className="text-lg font-semibold">Nouveau ticket</h2>
-          <Empty text="Formulaire de création à venir (US2)." />
+          {/* Après une création, on revient page 1 : le nouveau ticket y est. */}
+          <TicketForm onCreated={() => setPage(1)} />
         </section>
 
         <section className="grid gap-4">
           <h2 className="text-lg font-semibold">Tickets</h2>
-          <Empty text="Liste des tickets à venir (US1)." />
+
+          <TicketFilters
+            search={search}
+            sort={sort}
+            pageSize={pageSize}
+            onSearchChange={changeSearch}
+            onSortChange={changeSort}
+            onPageSizeChange={changePageSize}
+          />
+
+          <TicketList
+            page={page}
+            pageSize={pageSize}
+            search={debouncedSearch}
+            sort={sort}
+            onPageChange={setPage}
+          />
         </section>
       </main>
     </>

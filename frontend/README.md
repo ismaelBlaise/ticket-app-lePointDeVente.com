@@ -1,6 +1,10 @@
 # Frontend — Gestion de tickets
 
-Application React + TypeScript (Vite) permettant de consulter et de créer des tickets.
+Application React + TypeScript (Vite) : consulter, créer, rechercher, trier et
+fermer des tickets.
+
+Vue d'ensemble du projet, stack et choix d'architecture :
+[README à la racine](../README.md).
 
 ## Prérequis
 
@@ -24,6 +28,7 @@ Les scripts ci-dessous se lancent dans `frontend/`, ou depuis la racine avec
 | `npm run dev`       | Serveur de développement Vite               |
 | `npm run build`     | Vérification des types puis build de `dist` |
 | `npm run preview`   | Sert le build de production                 |
+| `npm test`          | Tests des composants (Vitest + jsdom)       |
 | `npm run lint`      | ESLint sur tout le projet                   |
 | `npm run typecheck` | Vérification TypeScript seule               |
 
@@ -40,9 +45,10 @@ src/
   App.tsx              L'écran de l'application
   index.css            Tailwind + design system (couleurs, arrondi)
   api/http.ts          Appel fetch commun (adresse, JSON, erreurs)
-  api/tickets.ts       getTickets / createTicket
+  api/tickets.ts       getTickets / createTicket / updateTicketStatus
   hooks/useTickets.ts  useTickets / useCreateTicket
-  components/          Button, Input, Badge, Message (chargement, erreur, vide)
+  components/          TicketForm, TicketFilters, TicketList et les composants
+                       réutilisables (Button, Input, Badge, Message)
   utils/date.ts        Affichage des dates
   utils/status.ts      Libellés des statuts
 ```
@@ -90,4 +96,17 @@ Tailwind brute comme `bg-blue-600`.
   le design system ci-dessus. L'énoncé ne demande pas de travail visuel.
 - **Alias `@/`** : imports absolus, déclaré dans `vite.config.ts` et
   `tsconfig.app.json`.
+- **Vitest + Testing Library** : les tests remplacent `fetch` par une fausse
+  fonction. Ils vérifient les quatre états de la liste (chargement, erreur,
+  liste vide, tickets affichés), la pagination et le nombre par page, la
+  recherche et le tri, le changement de statut, le formulaire (titre vide
+  refusé, envoi, erreur de l'API) et, dans `App.test.tsx`, que le ticket créé
+  apparaît dans la liste sans recharger la page.
+- **Pagination, recherche et tri** : la page, le nombre de tickets par page
+  (5, 10 ou 20), le texte cherché et l'ordre de tri vivent dans `App`, qui les
+  passe à la liste. Chaque combinaison a sa propre entrée en cache
+  (`['tickets', page, pageSize, search, sort]`). Changer un filtre ramène
+  page 1, et après une création aussi, puisque le nouveau ticket est en tête.
+- **Recherche différée** : `useDebounce` attend 300 ms après la dernière lettre
+  tapée avant d'appeler l'API, au lieu d'un appel par caractère.
 - **Pas de routeur ni de state manager** : l'application n'a qu'un écran.

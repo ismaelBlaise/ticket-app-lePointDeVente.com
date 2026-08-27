@@ -1,10 +1,38 @@
-import type { NewTicket, Ticket } from '@ticket-app/shared'
-import { get, post } from './http'
+import type {
+  NewTicket,
+  Ticket,
+  TicketPage,
+  TicketSort,
+  TicketStatus,
+} from '@ticket-app/shared'
+import { get, patch, post } from './http'
 
-export function getTickets(): Promise<Ticket[]> {
-  return get<Ticket[]>('/tickets')
+export interface TicketsQuery {
+  page: number
+  pageSize: number
+  search: string
+  sort: TicketSort
+}
+
+export function getTickets(query: TicketsQuery): Promise<TicketPage> {
+  // URLSearchParams encode proprement les espaces et les accents.
+  const params = new URLSearchParams({
+    page: String(query.page),
+    pageSize: String(query.pageSize),
+    sort: query.sort,
+  })
+
+  if (query.search !== '') {
+    params.set('search', query.search)
+  }
+
+  return get<TicketPage>(`/tickets?${params.toString()}`)
 }
 
 export function createTicket(ticket: NewTicket): Promise<Ticket> {
   return post<Ticket>('/tickets', ticket)
+}
+
+export function updateTicketStatus(id: string, status: TicketStatus): Promise<Ticket> {
+  return patch<Ticket>(`/tickets/${id}`, { status })
 }

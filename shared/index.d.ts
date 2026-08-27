@@ -14,3 +14,19 @@ export interface Ticket {
 export interface NewTicket {
   title: string
 }
+
+// Ce que le client envoie pour changer le statut d'un ticket.
+export interface TicketStatusUpdate {
+  status: TicketStatus
+}
+
+// Ordre de tri par date de création : du plus ancien ou du plus récent.
+export type TicketSort = 'asc' | 'desc'
+
+// Réponse de la liste des tickets : une page et de quoi la situer.
+export interface TicketPage {
+  items: Ticket[]
+  total: number
+  page: number
+  pageSize: number
+}

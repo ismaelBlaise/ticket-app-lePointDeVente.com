@@ -13,9 +13,10 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
   const data = await response.json().catch(() => null)
 
-  // L'API renvoie { message: "..." } quand elle refuse la requête.
   if (!response.ok) {
-    throw new Error(data?.message ?? `Erreur ${response.status}`)
+    // L'API renvoie { message: "..." } quand elle refuse la requête.
+    const message = data && data.message ? data.message : `Erreur ${response.status}`
+    throw new Error(message)
   }
 
   return data as T
@@ -25,10 +26,18 @@ export function get<T>(path: string): Promise<T> {
   return request<T>(path)
 }
 
-export function post<T>(path: string, body: unknown): Promise<T> {
+function sendJson<T>(method: string, path: string, body: unknown): Promise<T> {
   return request<T>(path, {
-    method: 'POST',
+    method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
+}
+
+export function post<T>(path: string, body: unknown): Promise<T> {
+  return sendJson<T>('POST', path, body)
+}
+
+export function patch<T>(path: string, body: unknown): Promise<T> {
+  return sendJson<T>('PATCH', path, body)
 }
