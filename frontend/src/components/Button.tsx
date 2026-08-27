@@ -5,11 +5,11 @@ const STYLES = {
   secondary: 'border border-line bg-surface hover:border-brand',
 }
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary'
 }
 
-export function Button({ variant = 'primary', type = 'button', ...props }: Props) {
+export function Button({ variant = 'primary', type = 'button', ...props }: ButtonProps) {
   return (
     <button
       {...props}
