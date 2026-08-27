@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+
+/* Mini design system : toutes les valeurs communes de l'application.
+   Chaque variable écrite ici devient une classe Tailwind.
+   Exemple : --color-brand donne bg-brand, text-brand et border-brand. */
+@theme {
+  /* Couleur principale (boutons, liens, focus) */
+  --color-brand: #2563eb;
+  --color-brand-dark: #1d4ed8;
+
+  /* Fonds et bordures */
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+  --color-line: #e2e8f0;
+
+  /* Textes */
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+
+  /* États */
+  --color-danger: #dc2626;
+  --color-danger-light: #fef2f2;
+  --color-success: #16a34a;
+  --color-success-light: #f0fdf4;
+
+  /* Arrondi commun à tous les blocs : classe rounded-box */
+  --radius-box: 8px;
+}
+
+body {
+  background-color: var(--color-page);
+  color: var(--color-text);
+}
