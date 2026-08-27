@@ -11,16 +11,18 @@ function mockFetch(body: unknown, ok = true) {
   return fetchMock
 }
 
-function renderForm() {
+function renderForm(onCreated = vi.fn()) {
   const queryClient = new QueryClient({
     defaultOptions: { mutations: { retry: false } },
   })
 
   render(
     <QueryClientProvider client={queryClient}>
-      <TicketForm />
+      <TicketForm onCreated={onCreated} />
     </QueryClientProvider>,
   )
+
+  return onCreated
 }
 
 function getInput(): HTMLInputElement {

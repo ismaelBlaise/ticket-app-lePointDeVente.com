@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { TicketForm } from '@/components/TicketForm'
 import { TicketList } from '@/components/TicketList'
 
 export function App() {
+  const [page, setPage] = useState(1)
+
   return (
     <>
       <header className="border-b border-line bg-surface">
@@ -14,12 +17,13 @@ export function App() {
       <main className="mx-auto grid w-full max-w-3xl gap-8 px-5 py-8">
         <section className="grid gap-4">
           <h2 className="text-lg font-semibold">Nouveau ticket</h2>
-          <TicketForm />
+          {/* Après une création, on revient page 1 : le nouveau ticket y est. */}
+          <TicketForm onCreated={() => setPage(1)} />
         </section>
 
         <section className="grid gap-4">
           <h2 className="text-lg font-semibold">Tickets</h2>
-          <TicketList />
+          <TicketList page={page} onPageChange={setPage} />
         </section>
       </main>
     </>
