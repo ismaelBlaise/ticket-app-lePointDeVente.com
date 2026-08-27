@@ -43,8 +43,8 @@ src/
   api/http.ts          Appel fetch commun (adresse, JSON, erreurs)
   api/tickets.ts       getTickets / createTicket
   hooks/useTickets.ts  useTickets / useCreateTicket
-  components/          TicketForm, TicketList et les composants réutilisables
-                       (Button, Input, Badge, Message)
+  components/          TicketForm, TicketFilters, TicketList et les composants
+                       réutilisables (Button, Input, Badge, Message)
   utils/date.ts        Affichage des dates
   utils/status.ts      Libellés des statuts
 ```
@@ -94,10 +94,15 @@ Tailwind brute comme `bg-blue-600`.
   `tsconfig.app.json`.
 - **Vitest + Testing Library** : les tests remplacent `fetch` par une fausse
   fonction. Ils vérifient les quatre états de la liste (chargement, erreur,
-  liste vide, tickets affichés), la pagination, le formulaire (titre vide
+  liste vide, tickets affichés), la pagination, la recherche et le tri, le
+  formulaire (titre vide
   refusé, envoi, erreur de l'API) et, dans `App.test.tsx`, que le ticket créé
   apparaît dans la liste sans recharger la page.
-- **Pagination** : le numéro de page vit dans `App`, qui le passe à la liste.
-  Chaque page a sa propre entrée en cache (`['tickets', page]`), et après une
-  création on revient page 1, où le nouveau ticket se trouve.
+- **Pagination, recherche et tri** : la page, le texte cherché et l'ordre de
+  tri vivent dans `App`, qui les passe à la liste. Chaque combinaison a sa
+  propre entrée en cache (`['tickets', page, search, sort]`). Changer la
+  recherche ou le tri ramène page 1, et après une création aussi, puisque le
+  nouveau ticket se trouve en tête.
+- **Recherche différée** : `useDebounce` attend 300 ms après la dernière lettre
+  tapée avant d'appeler l'API, au lieu d'un appel par caractère.
 - **Pas de routeur ni de state manager** : l'application n'a qu'un écran.

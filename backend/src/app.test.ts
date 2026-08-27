@@ -51,6 +51,27 @@ describe('GET /api/tickets', () => {
     expect(response.body.message).toBe('La taille de page doit être un nombre entier entre 1 et 50')
   })
 
+  it('cherche les tickets par titre', async () => {
+    const response = await request(app).get('/api/tickets?search=imprimante')
+
+    expect(response.status).toBe(200)
+    expect(response.body.total).toBe(1)
+    expect(response.body.items[0].title).toBe('Imprimante du 2e étage hors service')
+  })
+
+  it('trie du plus ancien au plus récent quand on demande sort=asc', async () => {
+    const response = await request(app).get('/api/tickets?sort=asc')
+
+    expect(response.body.items[0].title).toBe('Le site est lent le matin')
+  })
+
+  it('refuse un tri inconnu', async () => {
+    const response = await request(app).get('/api/tickets?sort=xxx')
+
+    expect(response.status).toBe(400)
+    expect(response.body.message).toBe('Le tri doit valoir "asc" ou "desc"')
+  })
+
   it("n'expose pas le serveur utilisé", async () => {
     const response = await request(app).get('/api/tickets')
 

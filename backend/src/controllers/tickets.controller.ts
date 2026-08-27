@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 import { newTicketSchema, ticketsQuerySchema } from '../schemas/ticket.schema'
-import { DEFAULT_PAGE_SIZE, create, findAll, findPage } from '../services/tickets.service'
+import { create, findTickets } from '../services/tickets.service'
 
 // Le contrôleur fait le lien entre la requête HTTP et le service :
 // il lit la requête, appelle le service et choisit le code de réponse.
@@ -13,17 +13,7 @@ export function getTickets(req: Request, res: Response): void {
     return
   }
 
-  const { page, pageSize } = result.data
-
-  if (page === undefined && pageSize === undefined) {
-    res.status(200).json(findAll())
-    return
-  }
-
-  const currentPage = page === undefined ? 1 : page
-  const currentPageSize = pageSize === undefined ? DEFAULT_PAGE_SIZE : pageSize
-
-  res.status(200).json(findPage(currentPage, currentPageSize))
+  res.status(200).json(findTickets(result.data))
 }
 
 export function postTicket(req: Request, res: Response): void {

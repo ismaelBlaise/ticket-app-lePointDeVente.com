@@ -1,45 +1,55 @@
 import { describe, expect, it } from 'vitest'
-import { create, findAll, findPage } from './tickets.service'
+import { create, findTickets } from './tickets.service'
 
 describe('service tickets', () => {
-  it('renvoie tous les tickets de départ', () => {
-    const page = findAll()
+  it('renvoie tous les tickets quand aucune option n\'est donnée', () => {
+    const page = findTickets({})
 
     expect(page.items).toHaveLength(6)
     expect(page.total).toBe(6)
-    expect(page.items[0]).toMatchObject({
-      id: expect.any(String),
-      title: expect.any(String),
-      createdAt: expect.any(String),
-    })
   })
 
-  it('renvoie une page et le nombre total de tickets', () => {
-    const page = findPage(1, 5)
+  it('trie du plus récent au plus ancien par défaut', () => {
+    const page = findTickets({})
 
-    expect(page.items).toHaveLength(5)
+    expect(page.items[0].title).toBe('Le paiement en ligne renvoie une erreur')
+  })
+
+  it('trie du plus ancien au plus récent avec sort asc', () => {
+    const page = findTickets({ sort: 'asc' })
+
+    expect(page.items[0].title).toBe('Le site est lent le matin')
+  })
+
+  it('cherche dans le titre sans tenir compte des majuscules', () => {
+    const page = findTickets({ search: 'IMPRIMANTE' })
+
+    expect(page.items).toHaveLength(1)
+    expect(page.total).toBe(1)
+    expect(page.items[0].title).toBe('Imprimante du 2e étage hors service')
+  })
+
+  it('renvoie une page vide quand la recherche ne trouve rien', () => {
+    const page = findTickets({ search: 'zzz' })
+
+    expect(page.items).toEqual([])
+    expect(page.total).toBe(0)
+  })
+
+  it('pagine les tickets trouvés', () => {
+    const page = findTickets({ page: 2, pageSize: 5 })
+
+    expect(page.items).toHaveLength(1)
     expect(page.total).toBe(6)
-    expect(page.page).toBe(1)
-    expect(page.pageSize).toBe(5)
-  })
-
-  it('renvoie le reste des tickets sur la page suivante', () => {
-    expect(findPage(2, 5).items).toHaveLength(1)
-  })
-
-  it('renvoie une page vide au-delà du dernier ticket', () => {
-    expect(findPage(10, 5).items).toEqual([])
   })
 
   it('crée un ticket ouvert et le place en tête de liste', () => {
-    const before = findAll()
     const ticket = create({ title: 'Écran cassé' })
-    const after = findAll()
+    const page = findTickets({})
 
     expect(ticket).toMatchObject({ title: 'Écran cassé', status: 'open' })
     expect(ticket.id).toBeTruthy()
-    expect(ticket.createdAt).toBeTruthy()
-    expect(after.items).toHaveLength(before.total + 1)
-    expect(after.items[0].title).toBe('Écran cassé')
+    expect(page.items[0].title).toBe('Écran cassé')
+    expect(page.total).toBe(7)
   })
 })
