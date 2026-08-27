@@ -120,3 +120,32 @@ describe('POST /api/tickets', () => {
     expect(response.body.message).toBe('Le titre ne doit pas dépasser 120 caractères')
   })
 })
+
+describe('PATCH /api/tickets/:id', () => {
+  it('change le statut du ticket', async () => {
+    const created = await request(app).post('/api/tickets').send({ title: 'Ticket à fermer' })
+    const response = await request(app)
+      .patch(`/api/tickets/${created.body.id}`)
+      .send({ status: 'closed' })
+
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('closed')
+  })
+
+  it('refuse un statut inconnu', async () => {
+    const created = await request(app).post('/api/tickets').send({ title: 'Ticket à fermer' })
+    const response = await request(app)
+      .patch(`/api/tickets/${created.body.id}`)
+      .send({ status: 'termine' })
+
+    expect(response.status).toBe(400)
+    expect(response.body.message).toBe('Le statut doit valoir "open" ou "closed"')
+  })
+
+  it('renvoie 404 quand le ticket est inconnu', async () => {
+    const response = await request(app).patch('/api/tickets/inconnu').send({ status: 'closed' })
+
+    expect(response.status).toBe(404)
+    expect(response.body.message).toBe('Ticket introuvable')
+  })
+})
