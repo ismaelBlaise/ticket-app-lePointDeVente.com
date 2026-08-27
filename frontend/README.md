@@ -1,6 +1,10 @@
 # Frontend — Gestion de tickets
 
-Application React + TypeScript (Vite) permettant de consulter et de créer des tickets.
+Application React + TypeScript (Vite) : consulter, créer, rechercher, trier et
+fermer des tickets.
+
+Vue d'ensemble du projet, stack et choix d'architecture :
+[README à la racine](../README.md).
 
 ## Prérequis
 
