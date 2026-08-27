@@ -1,5 +1,5 @@
 import type { Ticket, TicketSort } from '@ticket-app/shared'
-import { useTickets } from '@/hooks/useTickets'
+import { useTickets, useUpdateTicketStatus } from '@/hooks/useTickets'
 import { formatDate } from '@/utils/date'
 import { STATUS_LABELS } from '@/utils/status'
 import { Badge } from './Badge'
@@ -70,16 +70,36 @@ interface TicketRowProps {
 }
 
 function TicketRow({ ticket }: TicketRowProps) {
-  const variant = ticket.status === 'open' ? 'success' : 'neutral'
+  const updateStatus = useUpdateTicketStatus()
+
+  const isOpen = ticket.status === 'open'
+  const nextStatus = isOpen ? 'closed' : 'open'
+  const actionLabel = isOpen ? 'Fermer' : 'Rouvrir'
 
   return (
     <li className="flex items-center justify-between gap-4 rounded-box border border-line bg-surface p-4">
       <div>
         <p className="font-medium">{ticket.title}</p>
         <p className="text-sm text-muted">{formatDate(ticket.createdAt)}</p>
+
+        {updateStatus.isError && (
+          <p role="alert" className="text-sm text-danger">
+            {updateStatus.error.message}
+          </p>
+        )}
       </div>
 
-      <Badge variant={variant}>{STATUS_LABELS[ticket.status]}</Badge>
+      <div className="flex items-center gap-3">
+        <Badge variant={isOpen ? 'success' : 'neutral'}>{STATUS_LABELS[ticket.status]}</Badge>
+
+        <Button
+          variant="secondary"
+          disabled={updateStatus.isPending}
+          onClick={() => updateStatus.mutate({ id: ticket.id, status: nextStatus })}
+        >
+          {actionLabel}
+        </Button>
+      </div>
     </li>
   )
 }

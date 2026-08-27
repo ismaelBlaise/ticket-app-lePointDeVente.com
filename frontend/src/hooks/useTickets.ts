@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { TicketSort } from '@ticket-app/shared'
-import { createTicket, getTickets } from '@/api/tickets'
+import type { TicketSort, TicketStatus } from '@ticket-app/shared'
+import { createTicket, getTickets, updateTicketStatus } from '@/api/tickets'
 
 // Nom du cache de la liste. Sert à la lire et à la recharger après un ajout.
 const TICKETS_KEY = ['tickets']
@@ -27,6 +27,20 @@ export function useCreateTicket() {
   return useMutation({
     mutationFn: createTicket,
     // Après un ajout réussi, la liste se recharge toute seule.
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: TICKETS_KEY }),
+  })
+}
+
+interface StatusChange {
+  id: string
+  status: TicketStatus
+}
+
+export function useUpdateTicketStatus() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (change: StatusChange) => updateTicketStatus(change.id, change.status),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: TICKETS_KEY }),
   })
 }

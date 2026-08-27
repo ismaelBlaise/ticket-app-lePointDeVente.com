@@ -1,12 +1,14 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { TicketList } from './TicketList'
 
 function mockFetch(body: unknown, ok = true) {
   const response = { ok, status: ok ? 200 : 500, json: async () => body }
+  const fetchMock = vi.fn(async () => response)
 
-  vi.stubGlobal('fetch', vi.fn(async () => response))
+  vi.stubGlobal('fetch', fetchMock)
+  return fetchMock
 }
 
 function renderList(page = 1, search = '', onPageChange = vi.fn()) {
@@ -84,5 +86,19 @@ describe('TicketList', () => {
     fireEvent.click(await screen.findByText('Suivant'))
 
     expect(onPageChange).toHaveBeenCalledWith(2)
+  })
+
+  it('ferme un ticket au clic sur Fermer', async () => {
+    const fetchMock = mockFetch({ items: [ticket], total: 1, page: 1, pageSize: 5 })
+    renderList()
+
+    fireEvent.click(await screen.findByText('Fermer'))
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        '/api/tickets/1',
+        expect.objectContaining({ method: 'PATCH' }),
+      )
+    })
   })
 })

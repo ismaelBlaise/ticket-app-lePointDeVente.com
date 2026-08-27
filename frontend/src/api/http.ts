@@ -26,10 +26,18 @@ export function get<T>(path: string): Promise<T> {
   return request<T>(path)
 }
 
-export function post<T>(path: string, body: unknown): Promise<T> {
+function sendJson<T>(method: string, path: string, body: unknown): Promise<T> {
   return request<T>(path, {
-    method: 'POST',
+    method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
+}
+
+export function post<T>(path: string, body: unknown): Promise<T> {
+  return sendJson<T>('POST', path, body)
+}
+
+export function patch<T>(path: string, body: unknown): Promise<T> {
+  return sendJson<T>('PATCH', path, body)
 }
