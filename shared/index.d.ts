@@ -15,6 +15,9 @@ export interface NewTicket {
   title: string
 }
 
+// Ordre de tri par date de création : du plus ancien ou du plus récent.
+export type TicketSort = 'asc' | 'desc'
+
 // Réponse de la liste des tickets : une page et de quoi la situer.
 export interface TicketPage {
   items: Ticket[]
