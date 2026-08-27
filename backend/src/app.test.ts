@@ -34,3 +34,38 @@ describe('GET /api/tickets', () => {
     expect(response.body.message).toBe('Route introuvable')
   })
 })
+
+describe('POST /api/tickets', () => {
+  it('crée un ticket et le renvoie', async () => {
+    const response = await request(app).post('/api/tickets').send({ title: 'Écran cassé' })
+
+    expect(response.status).toBe(201)
+    expect(response.body).toMatchObject({ title: 'Écran cassé', status: 'open' })
+    expect(response.body.id).toBeTruthy()
+  })
+
+  it('ajoute le ticket créé à la liste', async () => {
+    const before = await request(app).get('/api/tickets')
+    await request(app).post('/api/tickets').send({ title: 'Souris défectueuse' })
+    const after = await request(app).get('/api/tickets')
+
+    expect(after.body).toHaveLength(before.body.length + 1)
+    expect(after.body[0].title).toBe('Souris défectueuse')
+  })
+
+  it('refuse un titre vide', async () => {
+    const response = await request(app).post('/api/tickets').send({ title: '   ' })
+
+    expect(response.status).toBe(400)
+    expect(response.body.message).toBe('Le titre est obligatoire')
+  })
+
+  it('refuse un titre trop long', async () => {
+    const response = await request(app)
+      .post('/api/tickets')
+      .send({ title: 'a'.repeat(121) })
+
+    expect(response.status).toBe(400)
+    expect(response.body.message).toBe('Le titre ne doit pas dépasser 120 caractères')
+  })
+})
