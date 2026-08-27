@@ -83,10 +83,3 @@ Tailwind brute comme `bg-blue-600`.
 - **Alias `@/`** : imports absolus, déclaré dans `vite.config.ts` et
   `tsconfig.app.json`.
 - **Pas de routeur ni de state manager** : l'application n'a qu'un écran.
-
-## Reste à faire
-
-- Le formulaire et la liste, branchés sur les hooks déjà écrits (US1 et US2) ;
-  l'écran affiche pour l'instant deux blocs d'attente.
-- Recherche par titre, pagination, changement de statut (points facultatifs).
-- Tests (Vitest + Testing Library) sur le formulaire et les états de la liste.
