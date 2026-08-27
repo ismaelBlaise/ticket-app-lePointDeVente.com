@@ -94,15 +94,15 @@ Tailwind brute comme `bg-blue-600`.
   `tsconfig.app.json`.
 - **Vitest + Testing Library** : les tests remplacent `fetch` par une fausse
   fonction. Ils vérifient les quatre états de la liste (chargement, erreur,
-  liste vide, tickets affichés), la pagination, la recherche et le tri, le
-  changement de statut, le formulaire (titre vide
+  liste vide, tickets affichés), la pagination et le nombre par page, la
+  recherche et le tri, le changement de statut, le formulaire (titre vide
   refusé, envoi, erreur de l'API) et, dans `App.test.tsx`, que le ticket créé
   apparaît dans la liste sans recharger la page.
-- **Pagination, recherche et tri** : la page, le texte cherché et l'ordre de
-  tri vivent dans `App`, qui les passe à la liste. Chaque combinaison a sa
-  propre entrée en cache (`['tickets', page, search, sort]`). Changer la
-  recherche ou le tri ramène page 1, et après une création aussi, puisque le
-  nouveau ticket se trouve en tête.
+- **Pagination, recherche et tri** : la page, le nombre de tickets par page
+  (5, 10 ou 20), le texte cherché et l'ordre de tri vivent dans `App`, qui les
+  passe à la liste. Chaque combinaison a sa propre entrée en cache
+  (`['tickets', page, pageSize, search, sort]`). Changer un filtre ramène
+  page 1, et après une création aussi, puisque le nouveau ticket est en tête.
 - **Recherche différée** : `useDebounce` attend 300 ms après la dernière lettre
   tapée avant d'appeler l'API, au lieu d'un appel par caractère.
 - **Pas de routeur ni de state manager** : l'application n'a qu'un écran.

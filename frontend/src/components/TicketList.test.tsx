@@ -11,14 +11,20 @@ function mockFetch(body: unknown, ok = true) {
   return fetchMock
 }
 
-function renderList(page = 1, search = '', onPageChange = vi.fn()) {
+function renderList(page = 1, search = '', pageSize = 5, onPageChange = vi.fn()) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   })
 
   render(
     <QueryClientProvider client={queryClient}>
-      <TicketList page={page} search={search} sort="desc" onPageChange={onPageChange} />
+      <TicketList
+        page={page}
+        pageSize={pageSize}
+        search={search}
+        sort="desc"
+        onPageChange={onPageChange}
+      />
     </QueryClientProvider>,
   )
 
@@ -81,7 +87,7 @@ describe('TicketList', () => {
 
   it('demande la page suivante au clic sur Suivant', async () => {
     mockFetch({ items: [ticket], total: 6, page: 1, pageSize: 5 })
-    const onPageChange = renderList(1, '')
+    const onPageChange = renderList(1, '', 5)
 
     fireEvent.click(await screen.findByText('Suivant'))
 
@@ -100,5 +106,17 @@ describe('TicketList', () => {
         expect.objectContaining({ method: 'PATCH' }),
       )
     })
+  })
+
+  it('demande à l’API le nombre de tickets par page choisi', async () => {
+    const fetchMock = mockFetch({ items: [ticket], total: 1, page: 1, pageSize: 20 })
+    renderList(1, '', 20)
+
+    await screen.findByText('Imprimante hors service')
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/tickets?page=1&pageSize=20&sort=desc',
+      undefined,
+    )
   })
 })

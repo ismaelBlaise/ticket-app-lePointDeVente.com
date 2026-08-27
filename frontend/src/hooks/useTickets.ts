@@ -5,19 +5,20 @@ import { createTicket, getTickets, updateTicketStatus } from '@/api/tickets'
 // Nom du cache de la liste. Sert à la lire et à la recharger après un ajout.
 const TICKETS_KEY = ['tickets']
 
-export const PAGE_SIZE = 5
+export const DEFAULT_PAGE_SIZE = 5
 
 interface UseTicketsOptions {
   page: number
+  pageSize: number
   search: string
   sort: TicketSort
 }
 
-export function useTickets({ page, search, sort }: UseTicketsOptions) {
+export function useTickets({ page, pageSize, search, sort }: UseTicketsOptions) {
   return useQuery({
-    // Chaque combinaison page + recherche + tri a sa propre entrée en cache.
-    queryKey: [...TICKETS_KEY, page, search, sort],
-    queryFn: () => getTickets({ page, pageSize: PAGE_SIZE, search, sort }),
+    // Chaque combinaison a sa propre entrée en cache.
+    queryKey: [...TICKETS_KEY, page, pageSize, search, sort],
+    queryFn: () => getTickets({ page, pageSize, search, sort }),
   })
 }
 

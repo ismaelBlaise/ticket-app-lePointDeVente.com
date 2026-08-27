@@ -4,9 +4,11 @@ import { TicketFilters } from '@/components/TicketFilters'
 import { TicketForm } from '@/components/TicketForm'
 import { TicketList } from '@/components/TicketList'
 import { useDebounce } from '@/hooks/useDebounce'
+import { DEFAULT_PAGE_SIZE } from '@/hooks/useTickets'
 
 export function App() {
   const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<TicketSort>('desc')
   const debouncedSearch = useDebounce(search)
@@ -18,6 +20,11 @@ export function App() {
 
   function changeSort(value: TicketSort) {
     setSort(value)
+    setPage(1)
+  }
+
+  function changePageSize(value: number) {
+    setPageSize(value)
     setPage(1)
   }
 
@@ -43,12 +50,15 @@ export function App() {
           <TicketFilters
             search={search}
             sort={sort}
+            pageSize={pageSize}
             onSearchChange={changeSearch}
             onSortChange={changeSort}
+            onPageSizeChange={changePageSize}
           />
 
           <TicketList
             page={page}
+            pageSize={pageSize}
             search={debouncedSearch}
             sort={sort}
             onPageChange={setPage}
