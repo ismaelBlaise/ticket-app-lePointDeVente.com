@@ -94,7 +94,10 @@ Tailwind brute comme `bg-blue-600`.
   `tsconfig.app.json`.
 - **Vitest + Testing Library** : les tests remplacent `fetch` par une fausse
   fonction. Ils vérifient les quatre états de la liste (chargement, erreur,
-  liste vide, tickets affichés), le formulaire (titre vide refusé, envoi,
-  erreur de l'API) et, dans `App.test.tsx`, que le ticket créé apparaît dans
-  la liste sans recharger la page.
+  liste vide, tickets affichés), la pagination, le formulaire (titre vide
+  refusé, envoi, erreur de l'API) et, dans `App.test.tsx`, que le ticket créé
+  apparaît dans la liste sans recharger la page.
+- **Pagination** : le numéro de page vit dans `App`, qui le passe à la liste.
+  Chaque page a sa propre entrée en cache (`['tickets', page]`), et après une
+  création on revient page 1, où le nouveau ticket se trouve.
 - **Pas de routeur ni de state manager** : l'application n'a qu'un écran.
