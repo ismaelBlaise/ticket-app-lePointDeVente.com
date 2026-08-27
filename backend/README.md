@@ -62,6 +62,7 @@ Le contrôleur ne contient pas de logique métier, et le service ne connaît ni
 | `GET`   | `/api/tickets?search=imprimante`   | —                    | `200` les tickets trouvés |
 | `GET`   | `/api/tickets?sort=asc`            | —                    | `200` les plus anciens d'abord |
 | `POST`  | `/api/tickets`                     | `{ "title": "..." }` | `201` le ticket créé      |
+| `PATCH` | `/api/tickets/:id`                 | `{ "status": "closed" }` | `200` le ticket modifié |
 
 La lecture renvoie toujours la même forme, paginée ou non :
 
@@ -88,6 +89,9 @@ permet au front de calculer le nombre de pages d'une recherche.
 
 À la création, le serveur génère l'identifiant, met le statut à `open` et
 enregistre la date. Le titre est obligatoire et limité à 120 caractères.
+
+Le `PATCH` change uniquement le statut, qui vaut `open` ou `closed`. Un
+identifiant inconnu renvoie `404`.
 
 En cas d'erreur, la réponse est toujours `{ "message": "..." }`, avec le code
 `400`, `404` (route inconnue) ou `500`.

@@ -41,7 +41,7 @@ src/
   App.tsx              L'écran de l'application
   index.css            Tailwind + design system (couleurs, arrondi)
   api/http.ts          Appel fetch commun (adresse, JSON, erreurs)
-  api/tickets.ts       getTickets / createTicket
+  api/tickets.ts       getTickets / createTicket / updateTicketStatus
   hooks/useTickets.ts  useTickets / useCreateTicket
   components/          TicketForm, TicketFilters, TicketList et les composants
                        réutilisables (Button, Input, Badge, Message)
@@ -95,7 +95,7 @@ Tailwind brute comme `bg-blue-600`.
 - **Vitest + Testing Library** : les tests remplacent `fetch` par une fausse
   fonction. Ils vérifient les quatre états de la liste (chargement, erreur,
   liste vide, tickets affichés), la pagination, la recherche et le tri, le
-  formulaire (titre vide
+  changement de statut, le formulaire (titre vide
   refusé, envoi, erreur de l'API) et, dans `App.test.tsx`, que le ticket créé
   apparaît dans la liste sans recharger la page.
 - **Pagination, recherche et tri** : la page, le texte cherché et l'ordre de
