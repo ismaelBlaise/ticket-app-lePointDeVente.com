@@ -5,10 +5,15 @@ elles repartent de zéro à chaque redémarrage du serveur.
 
 ## Installation et démarrage
 
+L'installation se fait à la racine du dépôt (monorepo npm) :
+
 ```bash
-npm install
-npm run dev            # http://localhost:3001
+npm install            # à la racine
+npm run dev:api        # http://localhost:3001
 ```
+
+Les scripts ci-dessous se lancent dans `backend/`, ou depuis la racine avec
+`npm run <script> -w backend`.
 
 | Script              | Rôle                                  |
 | ------------------- | ------------------------------------- |
@@ -31,7 +36,7 @@ src/
   routes/tickets.routes.ts           les URLs
   controllers/tickets.controller.ts  lit la requête, renvoie la réponse
   services/tickets.service.ts        données en mémoire et règles métier
-  models/ticket.model.ts             forme d'un ticket
+  models/ticket.model.ts             forme d'un ticket (types de @ticket-app/shared)
   schemas/ticket.schema.ts           validation des données reçues (zod)
   middlewares/errors.ts              route inconnue et erreurs
 ```

@@ -9,10 +9,15 @@ Application React + TypeScript (Vite) permettant de consulter et de créer des t
 
 ## Installation et démarrage
 
+L'installation se fait à la racine du dépôt (monorepo npm) :
+
 ```bash
-npm install
-npm run dev            # http://localhost:5173
+npm install            # à la racine
+npm run dev:web        # http://localhost:5173
 ```
+
+Les scripts ci-dessous se lancent dans `frontend/`, ou depuis la racine avec
+`npm run <script> -w frontend`.
 
 | Script              | Rôle                                        |
 | ------------------- | ------------------------------------------- |
@@ -34,17 +39,20 @@ src/
   main.tsx             Point d'entrée : QueryClient + affichage de <App />
   App.tsx              L'écran de l'application
   index.css            Tailwind + design system (couleurs, arrondi)
-  types/ticket.ts      Types du ticket, identiques à ceux de l'API
   api/http.ts          Appel fetch commun (adresse, JSON, erreurs)
   api/tickets.ts       getTickets / createTicket
   hooks/useTickets.ts  useTickets / useCreateTicket
   components/          Button, Input, Badge, Message (chargement, erreur, vide)
   utils/date.ts        Affichage des dates
+  utils/status.ts      Libellés des statuts
 ```
 
 Les dépendances vont toujours dans le même sens :
-`components` → `hooks` → `api` → `types`. Un composant n'appelle jamais `fetch`
+`components` → `hooks` → `api`. Un composant n'appelle jamais `fetch`
 directement.
+
+Les types du ticket viennent du paquet `@ticket-app/shared`, partagé avec l'API
+(voir le README à la racine).
 
 ## Design system
 
