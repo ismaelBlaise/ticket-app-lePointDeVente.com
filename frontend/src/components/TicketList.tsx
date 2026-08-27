@@ -8,13 +8,19 @@ import { Empty, ErrorMessage, Loading } from './Message'
 
 interface TicketListProps {
   page: number
+  pageSize: number
   search: string
   sort: TicketSort
   onPageChange: (page: number) => void
 }
 
-export function TicketList({ page, search, sort, onPageChange }: TicketListProps) {
-  const { data, isPending, isError, error, refetch } = useTickets({ page, search, sort })
+export function TicketList({ page, pageSize, search, sort, onPageChange }: TicketListProps) {
+  const { data, isPending, isError, error, refetch } = useTickets({
+    page,
+    pageSize,
+    search,
+    sort,
+  })
 
   if (isPending) {
     return <Loading text="Chargement des tickets…" />
