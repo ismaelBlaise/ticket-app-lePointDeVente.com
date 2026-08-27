@@ -1,0 +1,11 @@
+node_modules
+dist
+
+# Variables d'environnement locales
+.env
+
+# Éditeurs et système
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store

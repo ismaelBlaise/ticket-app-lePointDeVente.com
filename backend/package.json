@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ticket-app/shared": "*",
     "express": "^5.2.1",
     "zod": "^4.4.3"
   },
