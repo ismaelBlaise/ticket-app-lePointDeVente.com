@@ -9,14 +9,14 @@ function mockFetch(body: unknown, ok = true) {
   vi.stubGlobal('fetch', vi.fn(async () => response))
 }
 
-function renderList(page = 1, onPageChange = vi.fn()) {
+function renderList(page = 1, search = '', onPageChange = vi.fn()) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   })
 
   render(
     <QueryClientProvider client={queryClient}>
-      <TicketList page={page} onPageChange={onPageChange} />
+      <TicketList page={page} search={search} sort="desc" onPageChange={onPageChange} />
     </QueryClientProvider>,
   )
 
@@ -70,9 +70,16 @@ describe('TicketList', () => {
     expect(screen.queryByText('Suivant')).toBeNull()
   })
 
+  it("indique quand la recherche ne trouve rien", async () => {
+    mockFetch({ items: [], total: 0, page: 1, pageSize: 5 })
+    renderList(1, 'zzz')
+
+    expect(await screen.findByText('Aucun ticket ne correspond à cette recherche.')).toBeDefined()
+  })
+
   it('demande la page suivante au clic sur Suivant', async () => {
     mockFetch({ items: [ticket], total: 6, page: 1, pageSize: 5 })
-    const onPageChange = renderList()
+    const onPageChange = renderList(1, '')
 
     fireEvent.click(await screen.findByText('Suivant'))
 

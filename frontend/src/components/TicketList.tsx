@@ -1,4 +1,4 @@
-import type { Ticket } from '@ticket-app/shared'
+import type { Ticket, TicketSort } from '@ticket-app/shared'
 import { useTickets } from '@/hooks/useTickets'
 import { formatDate } from '@/utils/date'
 import { STATUS_LABELS } from '@/utils/status'
@@ -8,11 +8,13 @@ import { Empty, ErrorMessage, Loading } from './Message'
 
 interface TicketListProps {
   page: number
+  search: string
+  sort: TicketSort
   onPageChange: (page: number) => void
 }
 
-export function TicketList({ page, onPageChange }: TicketListProps) {
-  const { data, isPending, isError, error, refetch } = useTickets(page)
+export function TicketList({ page, search, sort, onPageChange }: TicketListProps) {
+  const { data, isPending, isError, error, refetch } = useTickets({ page, search, sort })
 
   if (isPending) {
     return <Loading text="Chargement des tickets…" />
@@ -23,7 +25,11 @@ export function TicketList({ page, onPageChange }: TicketListProps) {
   }
 
   if (data.items.length === 0) {
-    return <Empty text="Aucun ticket pour le moment." />
+    if (search === '') {
+      return <Empty text="Aucun ticket pour le moment." />
+    }
+
+    return <Empty text="Aucun ticket ne correspond à cette recherche." />
   }
 
   const totalPages = Math.ceil(data.total / data.pageSize)

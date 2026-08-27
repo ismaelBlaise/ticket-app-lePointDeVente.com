@@ -1,9 +1,25 @@
 import { useState } from 'react'
+import type { TicketSort } from '@ticket-app/shared'
+import { TicketFilters } from '@/components/TicketFilters'
 import { TicketForm } from '@/components/TicketForm'
 import { TicketList } from '@/components/TicketList'
+import { useDebounce } from '@/hooks/useDebounce'
 
 export function App() {
   const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [sort, setSort] = useState<TicketSort>('desc')
+  const debouncedSearch = useDebounce(search)
+
+  function changeSearch(value: string) {
+    setSearch(value)
+    setPage(1)
+  }
+
+  function changeSort(value: TicketSort) {
+    setSort(value)
+    setPage(1)
+  }
 
   return (
     <>
@@ -23,7 +39,20 @@ export function App() {
 
         <section className="grid gap-4">
           <h2 className="text-lg font-semibold">Tickets</h2>
-          <TicketList page={page} onPageChange={setPage} />
+
+          <TicketFilters
+            search={search}
+            sort={sort}
+            onSearchChange={changeSearch}
+            onSortChange={changeSort}
+          />
+
+          <TicketList
+            page={page}
+            search={debouncedSearch}
+            sort={sort}
+            onPageChange={setPage}
+          />
         </section>
       </main>
     </>
