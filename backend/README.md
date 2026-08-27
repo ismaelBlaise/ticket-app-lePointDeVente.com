@@ -55,11 +55,13 @@ Le contrôleur ne contient pas de logique métier, et le service ne connaît ni
 
 ## Routes
 
-| Méthode | URL                              | Corps attendu        | Réponse                    |
-| ------- | -------------------------------- | -------------------- | -------------------------- |
-| `GET`   | `/api/tickets`                   | —                    | `200` tous les tickets     |
-| `GET`   | `/api/tickets?page=2&pageSize=5` | —                    | `200` une page de tickets  |
-| `POST`  | `/api/tickets`                   | `{ "title": "..." }` | `201` le ticket créé       |
+| Méthode | URL                                | Corps attendu        | Réponse                   |
+| ------- | ---------------------------------- | -------------------- | ------------------------- |
+| `GET`   | `/api/tickets`                     | —                    | `200` tous les tickets    |
+| `GET`   | `/api/tickets?page=2&pageSize=5`   | —                    | `200` une page de tickets |
+| `GET`   | `/api/tickets?search=imprimante`   | —                    | `200` les tickets trouvés |
+| `GET`   | `/api/tickets?sort=asc`            | —                    | `200` les plus anciens d'abord |
+| `POST`  | `/api/tickets`                     | `{ "title": "..." }` | `201` le ticket créé      |
 
 La lecture renvoie toujours la même forme, paginée ou non :
 
@@ -72,9 +74,17 @@ La lecture renvoie toujours la même forme, paginée ou non :
 }
 ```
 
-`page` et `pageSize` sont facultatifs. Sans eux, la réponse contient tous les
-tickets. Dès que l'un des deux est présent, la pagination s'applique : `page`
-vaut 1 et `pageSize` vaut 5 par défaut, et `pageSize` ne peut pas dépasser 50.
+Tous les paramètres sont facultatifs et se combinent :
+
+- `search` cherche dans le titre, sans tenir compte des majuscules, 120
+  caractères au maximum ;
+- `sort` vaut `desc` (par défaut, les plus récents d'abord) ou `asc` ;
+- `page` et `pageSize` paginent le résultat. Sans eux, la réponse contient
+  tous les tickets trouvés. Dès que l'un des deux est présent, `page` vaut 1
+  et `pageSize` vaut 5 par défaut, sans dépasser 50.
+
+`total` compte les tickets trouvés, pas la totalité de la base : c'est ce qui
+permet au front de calculer le nombre de pages d'une recherche.
 
 À la création, le serveur génère l'identifiant, met le statut à `open` et
 enregistre la date. Le titre est obligatoire et limité à 120 caractères.
@@ -89,6 +99,8 @@ En cas d'erreur, la réponse est toujours `{ "message": "..." }`, avec le code
 - `express-rate-limit` limite chaque adresse IP à 100 appels par minute
   sur `/api`.
 - Les données reçues passent par zod avant d'atteindre le service.
+- La recherche compare du texte avec `includes` : aucune expression régulière
+  n'est construite à partir de la saisie de l'utilisateur.
 
 ## Choix techniques
 
