@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { findAll } from './tickets.service'
+import { create, findAll } from './tickets.service'
 
 describe('service tickets', () => {
   it('renvoie les tickets de départ', () => {
@@ -18,5 +18,17 @@ describe('service tickets', () => {
     tickets.pop()
 
     expect(findAll()).toHaveLength(6)
+  })
+
+  it('crée un ticket ouvert et le place en tête de liste', () => {
+    const before = findAll()
+    const ticket = create({ title: 'Écran cassé' })
+    const after = findAll()
+
+    expect(ticket).toMatchObject({ title: 'Écran cassé', status: 'open' })
+    expect(ticket.id).toBeTruthy()
+    expect(ticket.createdAt).toBeTruthy()
+    expect(after).toHaveLength(before.length + 1)
+    expect(after[0].title).toBe('Écran cassé')
   })
 })

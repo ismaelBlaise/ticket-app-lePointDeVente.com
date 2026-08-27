@@ -43,7 +43,7 @@ src/
   api/http.ts          Appel fetch commun (adresse, JSON, erreurs)
   api/tickets.ts       getTickets / createTicket
   hooks/useTickets.ts  useTickets / useCreateTicket
-  components/          TicketList et les composants réutilisables
+  components/          TicketForm, TicketList et les composants réutilisables
                        (Button, Input, Badge, Message)
   utils/date.ts        Affichage des dates
   utils/status.ts      Libellés des statuts
@@ -92,7 +92,9 @@ Tailwind brute comme `bg-blue-600`.
   le design system ci-dessus. L'énoncé ne demande pas de travail visuel.
 - **Alias `@/`** : imports absolus, déclaré dans `vite.config.ts` et
   `tsconfig.app.json`.
-- **Vitest + Testing Library** : les tests rendent `TicketList` avec un `fetch`
-  remplacé par une fausse fonction, et vérifient les quatre états de la liste :
-  chargement, erreur, liste vide et tickets affichés.
+- **Vitest + Testing Library** : les tests remplacent `fetch` par une fausse
+  fonction. Ils vérifient les quatre états de la liste (chargement, erreur,
+  liste vide, tickets affichés), le formulaire (titre vide refusé, envoi,
+  erreur de l'API) et, dans `App.test.tsx`, que le ticket créé apparaît dans
+  la liste sans recharger la page.
 - **Pas de routeur ni de state manager** : l'application n'a qu'un écran.

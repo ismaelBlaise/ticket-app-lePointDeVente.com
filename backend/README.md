@@ -55,13 +55,17 @@ Le contrôleur ne contient pas de logique métier, et le service ne connaît ni
 
 ## Routes
 
-| Méthode | URL            | Réponse                          |
-| ------- | -------------- | -------------------------------- |
-| `GET`   | `/api/tickets` | la liste des tickets (`Ticket[]`) |
+| Méthode | URL            | Corps attendu         | Réponse                            |
+| ------- | -------------- | --------------------- | ---------------------------------- |
+| `GET`   | `/api/tickets` | —                     | `200` la liste des tickets         |
+| `POST`  | `/api/tickets` | `{ "title": "..." }`  | `201` le ticket créé               |
 
 ```json
-[{ "id": "...", "title": "...", "status": "open", "createdAt": "..." }]
+{ "id": "...", "title": "...", "status": "open", "createdAt": "..." }
 ```
+
+À la création, le serveur génère l'identifiant, met le statut à `open` et
+enregistre la date. Le titre est obligatoire et limité à 120 caractères.
 
 En cas d'erreur, la réponse est toujours `{ "message": "..." }`, avec le code
 `400`, `404` (route inconnue) ou `500`.

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { TicketList } from './TicketList'
 
 function mockFetch(body: unknown, ok = true) {
@@ -27,10 +27,6 @@ const ticket = {
   status: 'open',
   createdAt: '2026-08-24T08:30:00.000Z',
 }
-
-afterEach(() => {
-  vi.unstubAllGlobals()
-})
 
 describe('TicketList', () => {
   it('affiche le titre, le statut et la date de chaque ticket', async () => {
