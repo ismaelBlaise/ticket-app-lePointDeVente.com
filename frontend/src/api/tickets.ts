@@ -1,5 +1,11 @@
-import type { NewTicket, Ticket, TicketPage, TicketSort } from '@ticket-app/shared'
-import { get, post } from './http'
+import type {
+  NewTicket,
+  Ticket,
+  TicketPage,
+  TicketSort,
+  TicketStatus,
+} from '@ticket-app/shared'
+import { get, patch, post } from './http'
 
 export interface TicketsQuery {
   page: number
@@ -25,4 +31,8 @@ export function getTickets(query: TicketsQuery): Promise<TicketPage> {
 
 export function createTicket(ticket: NewTicket): Promise<Ticket> {
   return post<Ticket>('/tickets', ticket)
+}
+
+export function updateTicketStatus(id: string, status: TicketStatus): Promise<Ticket> {
+  return patch<Ticket>(`/tickets/${id}`, { status })
 }

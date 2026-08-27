@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto'
 import { tickets } from '../data/tickets'
-import type { NewTicket, Ticket, TicketPage, TicketSort } from '../models/ticket.model'
+import type {
+  NewTicket,
+  Ticket,
+  TicketPage,
+  TicketSort,
+  TicketStatus,
+} from '../models/ticket.model'
 
 // Le service contient les données et les règles métier.
 // Les tickets sont gardés en mémoire : ils repartent de zéro au redémarrage.
@@ -70,5 +76,16 @@ export function create(newTicket: NewTicket): Ticket {
   }
 
   tickets.unshift(ticket)
+  return ticket
+}
+
+export function updateStatus(id: string, status: TicketStatus): Ticket | undefined {
+  const ticket = tickets.find((item) => item.id === id)
+
+  if (ticket === undefined) {
+    return undefined
+  }
+
+  ticket.status = status
   return ticket
 }

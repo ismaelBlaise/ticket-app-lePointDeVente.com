@@ -5,6 +5,7 @@ import { z } from 'zod'
 const TITLE_MESSAGE = 'Le titre est obligatoire'
 const PAGE_MESSAGE = 'Le numéro de page doit être un nombre entier supérieur à 0'
 const PAGE_SIZE_MESSAGE = 'La taille de page doit être un nombre entier entre 1 et 50'
+const STATUS_MESSAGE = 'Le statut doit valoir "open" ou "closed"'
 const SEARCH_MESSAGE = 'La recherche ne doit pas dépasser 120 caractères'
 const SORT_MESSAGE = 'Le tri doit valoir "asc" ou "desc"'
 
@@ -14,6 +15,10 @@ export const newTicketSchema = z.object({
     .trim()
     .min(1, TITLE_MESSAGE)
     .max(120, 'Le titre ne doit pas dépasser 120 caractères'),
+})
+
+export const ticketStatusSchema = z.object({
+  status: z.enum(['open', 'closed'], STATUS_MESSAGE),
 })
 
 export const ticketsQuerySchema = z.object({

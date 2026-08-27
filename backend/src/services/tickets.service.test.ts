@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { create, findTickets } from './tickets.service'
+import { create, findTickets, updateStatus } from './tickets.service'
 
 describe('service tickets', () => {
   it('renvoie tous les tickets quand aucune option n\'est donnée', () => {
@@ -51,5 +51,16 @@ describe('service tickets', () => {
     expect(ticket.id).toBeTruthy()
     expect(page.items[0].title).toBe('Écran cassé')
     expect(page.total).toBe(7)
+  })
+
+  it("change le statut d'un ticket", () => {
+    const ticket = create({ title: 'Ticket à fermer' })
+    const updated = updateStatus(ticket.id, 'closed')
+
+    expect(updated).toMatchObject({ id: ticket.id, status: 'closed' })
+  })
+
+  it("renvoie undefined quand le ticket n'existe pas", () => {
+    expect(updateStatus('inconnu', 'closed')).toBeUndefined()
   })
 })
