@@ -1,0 +1,34 @@
+import { Button } from './Button'
+
+// Les trois messages affichés quand la liste n'a rien à montrer :
+// chargement en cours, erreur, ou aucun ticket.
+
+const BOX = 'rounded-box border border-dashed border-line p-6 text-center text-muted'
+
+export function Loading({ text = 'Chargement…' }: { text?: string }) {
+  return (
+    <p className={BOX} role="status">
+      {text}
+    </p>
+  )
+}
+
+export function Empty({ text }: { text: string }) {
+  return <p className={BOX}>{text}</p>
+}
+
+export function ErrorMessage({ text, onRetry }: { text: string; onRetry?: () => void }) {
+  return (
+    <div
+      role="alert"
+      className="flex flex-col items-center gap-3 rounded-box border border-danger bg-danger-light p-6 text-center text-danger"
+    >
+      <p>{text}</p>
+      {onRetry && (
+        <Button variant="secondary" onClick={onRetry}>
+          Réessayer
+        </Button>
+      )}
+    </div>
+  )
+}
