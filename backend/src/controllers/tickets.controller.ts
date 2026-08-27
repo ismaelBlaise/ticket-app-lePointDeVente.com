@@ -1,5 +1,9 @@
+import type { Request, Response } from 'express'
+import { findAll } from '../services/tickets.service'
+
 // Le contrôleur fait le lien entre la requête HTTP et le service :
 // il lit la requête, appelle le service et choisit le code de réponse.
-// Les fonctions arrivent avec les user stories 1 et 2.
 
-export {}
+export function getTickets(_req: Request, res: Response): void {
+  res.status(200).json(findAll())
+}

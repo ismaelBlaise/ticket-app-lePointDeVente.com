@@ -1,4 +1,5 @@
 import { Empty } from '@/components/Message'
+import { TicketList } from '@/components/TicketList'
 
 export function App() {
   return (
@@ -13,12 +14,12 @@ export function App() {
       <main className="mx-auto grid w-full max-w-3xl gap-8 px-5 py-8">
         <section className="grid gap-4">
           <h2 className="text-lg font-semibold">Nouveau ticket</h2>
-          <Empty text="Formulaire de création à venir (US2)." />
+          <Empty text="Formulaire de création à venir." />
         </section>
 
         <section className="grid gap-4">
           <h2 className="text-lg font-semibold">Tickets</h2>
-          <Empty text="Liste des tickets à venir (US1)." />
+          <TicketList />
         </section>
       </main>
     </>

@@ -13,9 +13,10 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
   const data = await response.json().catch(() => null)
 
-  // L'API renvoie { message: "..." } quand elle refuse la requête.
   if (!response.ok) {
-    throw new Error(data?.message ?? `Erreur ${response.status}`)
+    // L'API renvoie { message: "..." } quand elle refuse la requête.
+    const message = data && data.message ? data.message : `Erreur ${response.status}`
+    throw new Error(message)
   }
 
   return data as T
